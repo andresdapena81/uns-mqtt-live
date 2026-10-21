@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UNS MQTT Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="wrap hrow">
+    <span class="badge">GOBIERNO DE TI · S11</span>
+    <div style="margin-right:auto">
+      <div class="htitle">UNS MQTT LIVE</div>
+      <div class="hsub">broker MQTT real · ISO 20922 · Lácteos La&nbsp;Pradera</div>
+    </div>
+    <div class="status" id="status"><span class="dot"></span><span id="status-t">conectando…</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="hsub" style="margin:0 0 16px">
+    Esto NO es una simulación en el navegador: hay un <b style="color:var(--cyan)">broker Aedes real</b> en el servidor.
+    El navegador habla MQTT sobre WebSocket contra <code id="brokerurl">—</code>.
+    Puedes conectar MQTT&nbsp;Explorer u otro cliente WS al mismo broker.
+  </p>
+
+  <div class="grid">
+    <div>
+      <!-- Bus en vivo -->
+      <div class="card">
+        <h3><span class="k">#</span> Bus en vivo · Unified Namespace <span class="rx" id="bus-count">0 tópicos</span></h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Tópico</th><th style="text-align:right">Valor</th><th style="text-align:right">Edad</th></tr></thead>
+            <tbody id="bus"></tbody>
+          </table>
+        </div>
+        <p class="hint">Suscrito a <code>lacteos/#</code>. Los valores llegan como mensajes <b>retenidos</b>: al recargar, el último valor aparece al instante.</p>
+      </div>
+
+      <!-- Publicar -->
+      <div class="card">
+        <h3><span class="k">#</span> Publica tu propio mensaje</h3>
+        <div class="row" style="margin-bottom:8px">
+          <input type="text" id="pub-topic" value="lacteos/bello/envasado/linea2/fermentador/alarma" aria-label="Tópico a publicar">
+        </div>
+        <div class="row">
+          <input type="text" id="pub-payload" value="temperatura alta" aria-label="Contenido del mensaje">
+          <button class="btn primary" id="pub-btn">▸ Publicar</button>
+        </div>
+        <p class="hint">Aparecerá en el bus de arriba si casa con <code>lacteos/#</code>. Así se ve que cualquiera puede publicar al UNS.</p>
+      </div>
+    </div>
+
+    <div>
+      <!-- Tu suscripción -->
+      <div class="card">
+        <h3><span class="k">#</span> Tu suscripción <span class="rx" id="sub-count">0 msg</span></h3>
+        <div class="row">
+          <input type="text" id="sub-filter" value="lacteos/+/+/+/+/temperatura" aria-label="Filtro de suscripción">
+          <button class="btn" id="sub-btn">Suscribir</button>
+        </div>
+        <ul class="feed" id="sub-feed"><li class="empty">— sin mensajes todavía —</li></ul>
+        <p class="hint"><b style="color:var(--amber)">+</b> un nivel · <b style="color:var(--amber)">#</b> el resto (al final). El <b>broker real</b> decide qué te entrega.</p>
+      </div>
+
+      <!-- Dispositivos -->
+      <div class="card">
+        <h3><span class="k">#</span> Dispositivos · Sparkplug</h3>
+        <div class="devs" id="devs"></div>
+        <p class="hint">Estado retenido bajo <code>.../status</code>. Cada tanto una máquina se cae y vuelve (idea de BIRTH/DEATH + Last Will).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Broker MQTT real (Aedes) · desplegable en Railway</span>
+    <span>Gobierno de TI y Sistemas Ciber-Físicos de Producción · USB</span>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
