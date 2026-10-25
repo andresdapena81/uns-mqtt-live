@@ -140,11 +140,4 @@
   }
   $("#sub-btn").addEventListener("click", () => subscribeUser($("#sub-filter").value.trim()));
   $("#sub-filter").addEventListener("keydown", (e) => { if (e.key === "Enter") subscribeUser($("#sub-filter").value.trim()); });
-
-  // ---- publicar ----
-  $("#pub-btn").addEventListener("click", () => {
-    const topic = $("#pub-topic").value.trim();
-    const payload = $("#pub-payload").value;
-    if (topic) client.publish(topic, payload, { qos: 0 });
-  });
 })();

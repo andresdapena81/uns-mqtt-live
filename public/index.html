@@ -21,6 +21,12 @@
   </div>
 </header>
 
+<nav class="top wrap" aria-label="Secciones">
+  <a href="/" class="active">Demo (planta)</a>
+  <a href="/taller.html">Taller en vivo</a>
+  <a href="/comenzar.html">Conectar tu sensor</a>
+</nav>
+
 <main class="wrap">
   <p class="hsub" style="margin:0 0 16px">
     Esto NO es una simulación en el navegador: hay un <b style="color:var(--cyan)">broker Aedes real</b> en el servidor.
@@ -42,17 +48,14 @@
         <p class="hint">Suscrito a <code>lacteos/#</code>. Los valores llegan como mensajes <b>retenidos</b>: al recargar, el último valor aparece al instante.</p>
       </div>
 
-      <!-- Publicar -->
+      <!-- Llamado al taller -->
       <div class="card">
-        <h3><span class="k">#</span> Publica tu propio mensaje</h3>
-        <div class="row" style="margin-bottom:8px">
-          <input type="text" id="pub-topic" value="lacteos/bello/envasado/linea2/fermentador/alarma" aria-label="Tópico a publicar">
-        </div>
+        <h3><span class="k">#</span> ¿Y tus propios sensores?</h3>
+        <p style="margin:0 0 10px;font-size:14px" class="mut">Esta planta es la demostración. En el <b style="color:var(--cyan)">taller</b>, cada grupo conecta sus sensores reales a este mismo broker y los ve aparecer en vivo.</p>
         <div class="row">
-          <input type="text" id="pub-payload" value="temperatura alta" aria-label="Contenido del mensaje">
-          <button class="btn primary" id="pub-btn">▸ Publicar</button>
+          <a class="btn primary" href="/comenzar.html" style="text-decoration:none">▸ Conectar mi sensor</a>
+          <a class="btn" href="/taller.html" style="text-decoration:none">Ver el taller en vivo</a>
         </div>
-        <p class="hint">Aparecerá en el bus de arriba si casa con <code>lacteos/#</code>. Así se ve que cualquiera puede publicar al UNS.</p>
       </div>
     </div>
 

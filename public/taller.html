@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Taller en vivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="wrap hrow">
+    <span class="badge">GOBIERNO DE TI · S11</span>
+    <div style="margin-right:auto">
+      <div class="htitle">TALLER EN VIVO</div>
+      <div class="hsub">sensores de los grupos conectados al broker</div>
+    </div>
+    <div class="status" id="status"><span class="dot"></span><span id="status-t">conectando…</span></div>
+  </div>
+</header>
+
+<nav class="top wrap" aria-label="Secciones">
+  <a href="/">Demo (planta)</a>
+  <a href="/taller.html" class="active">Taller en vivo</a>
+  <a href="/comenzar.html">Conectar tu sensor</a>
+</nav>
+
+<main class="wrap">
+  <div class="statline">
+    <div class="stat">GRUPOS <b id="s-grupos">0</b></div>
+    <div class="stat">DISPOSITIVOS <b id="s-dev">0</b></div>
+    <div class="stat">CLIENTES MQTT <b id="s-cli">0</b></div>
+    <div class="stat">LECTURAS GUARDADAS <b id="s-store">0</b></div>
+    <div class="stat">BASE DE DATOS <b id="s-db" style="font-size:12px">—</b></div>
+  </div>
+
+  <div id="grupos"></div>
+  <div class="empty-state" id="empty">
+    Aún no llega ningún sensor del taller.<br>
+    Cuando un grupo ejecute su sensor, aparecerá aquí al instante.
+    <div style="margin-top:12px"><a class="btn primary" href="/comenzar.html" style="text-decoration:none">¿Cómo conecto el mío?</a></div>
+  </div>
+
+  <div class="footer">
+    <span>Suscrito a <code>taller/#</code> · todo lo que llega se guarda en la base de datos</span>
+    <span>Gobierno de TI y CPPS · USB</span>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<script src="taller.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conectar tu sensor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="wrap hrow">
+    <span class="badge">GOBIERNO DE TI · S11</span>
+    <div style="margin-right:auto">
+      <div class="htitle">CONECTA TU SENSOR</div>
+      <div class="hsub">crea un dispositivo en tu equipo y envíalo al broker del taller</div>
+    </div>
+  </div>
+</header>
+
+<nav class="top wrap" aria-label="Secciones">
+  <a href="/">Demo (planta)</a>
+  <a href="/taller.html">Taller en vivo</a>
+  <a href="/comenzar.html" class="active">Conectar tu sensor</a>
+</nav>
+
+<main class="wrap">
+  <div class="card">
+    <h3><span class="k">#</span> 1 · Datos de conexión</h3>
+    <dl class="kvbox">
+      <dt>Broker (MQTT sobre WebSocket)</dt><dd id="k-url">—</dd>
+      <dt>Espacio de tópicos</dt><dd>taller/&lt;grupo&gt;/&lt;dispositivo&gt;/&lt;métrica&gt;</dd>
+      <dt>Usuario</dt><dd>el nombre de tu grupo (p. ej. <b>grupo1</b>)</dd>
+      <dt>Contraseña</dt><dd>el token del taller (te lo da el docente)</dd>
+    </dl>
+    <div class="row" style="margin-top:12px">
+      <label class="mono mut" style="font-size:12px;align-self:center">Token del taller:</label>
+      <input type="text" id="token" placeholder="pega aquí el token" style="max-width:260px">
+      <label class="mono mut" style="font-size:12px;align-self:center">Grupo:</label>
+      <input type="text" id="grupo" value="grupo1" style="max-width:150px">
+    </div>
+    <p class="hint">Cambia el token y el grupo y los scripts de abajo se actualizan solos. Cada grupo solo puede publicar bajo su propio nombre.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="k">#</span> 2 · Opción Python <span class="rx">pip install paho-mqtt</span></h3>
+    <div class="codeblock"><button class="copy" data-copy="py">copiar</button><pre id="code-py"></pre></div>
+    <p class="hint">Guárdalo como <code>sensor.py</code> y ejecútalo: <code>python sensor.py</code></p>
+  </div>
+
+  <div class="card">
+    <h3><span class="k">#</span> 2 · Opción Node <span class="rx">npm init -y &amp;&amp; npm install mqtt</span></h3>
+    <div class="codeblock"><button class="copy" data-copy="js">copiar</button><pre id="code-js"></pre></div>
+    <p class="hint">Guárdalo como <code>sensor.js</code> y ejecútalo: <code>node sensor.js</code></p>
+  </div>
+
+  <div class="card">
+    <h3><span class="k">#</span> 3 · Verifica</h3>
+    <ul class="steps">
+      <li>Cambia <code>GRUPO</code> y <code>DISPO</code> por los nombres de tu grupo y tu sensor.</li>
+      <li>Pega el <b>token</b> del taller donde dice <code>TOKEN</code>.</li>
+      <li>Ejecuta el script. Deberías ver <code>conectado, publicando…</code> en tu consola.</li>
+      <li>Abre <a href="/taller.html">el Taller en vivo</a>: tu dispositivo debe aparecer en segundos y sus lecturas quedan guardadas en la base de datos.</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <span>Reto del día: crea 2 dispositivos distintos en tu grupo y míralos juntos en el taller</span>
+    <span>Gobierno de TI y CPPS · USB</span>
+  </div>
+</main>
+
+<script src="comenzar.js"></script>
+</body>
+</html>
