@@ -15,7 +15,10 @@ async function init() {
     return;
   }
   const { Pool } = require("pg");
-  const ssl = /localhost|127\.0\.0\.1/.test(DATABASE_URL) ? false : { rejectUnauthorized: false };
+  // La red privada de Railway (*.railway.internal) y localhost NO usan SSL;
+  // los endpoints públicos/proxy sí. Elegir SSL según el host evita fallos de conexión.
+  const sinSsl = /localhost|127\.0\.0\.1|\.railway\.internal/.test(DATABASE_URL);
+  const ssl = sinSsl ? false : { rejectUnauthorized: false };
   pool = new Pool({ connectionString: DATABASE_URL, ssl });
   await pool.query(`
     CREATE TABLE IF NOT EXISTS readings (
