@@ -1,33 +1,40 @@
-// Sensor del taller — publica a tu broker MQTT (sobre WebSocket / wss).
+// Sensor del taller — publica VARIOS sensores a tu broker MQTT (sobre WebSocket / wss).
 // Requisito:  npm init -y && npm install mqtt
 // Ejecuta:    node sensor.js
 //
-// Edita HOST, GRUPO, DISPO y TOKEN con los datos que te dio el docente
-// (o cópialos ya rellenos desde la página /comenzar de la app).
+// TU TAREA: deja al menos 3 sensores DIFERENTES en la lista SENSORES
+//           (cambia nombres, métricas, unidades y rangos por los de tu proyecto).
 
 const mqtt = require("mqtt");
 
 const HOST  = "TU-APP.up.railway.app"; // dominio de la app en Railway (sin https:// ni /mqtt)
 const GRUPO = "grupo1";                // <-- el nombre de tu grupo (será tu usuario)
-const DISPO = "sensor1";               // <-- el nombre de tu dispositivo
 const TOKEN = "PON-AQUI-EL-TOKEN";     // token del taller (tu contraseña)
+
+// >>> MÍNIMO 3 SENSORES DIFERENTES — edita esta lista <<<
+const SENSORES = [
+  { dispositivo: "tanque_leche",   metrica: "nivel",       unidad: "%",   min: 40,  max: 95 },
+  { dispositivo: "banda_envasado", metrica: "velocidad",   unidad: "m/s", min: 0.2, max: 1.5 },
+  { dispositivo: "camara_frio",    metrica: "temperatura", unidad: "C",   min: 2,   max: 8 },
+];
 
 const c = mqtt.connect(`wss://${HOST}/mqtt`, {
   username: GRUPO,
   password: TOKEN,
-  clientId: `${GRUPO}-${DISPO}`,
+  clientId: `${GRUPO}-${Math.floor(1000 + Math.random() * 9000)}`,
 });
 
 c.on("connect", () => {
-  console.log("conectado, publicando...");
+  console.log(`conectado como '${GRUPO}' con ${SENSORES.length} sensores.`);
   setInterval(() => {
-    const base = `taller/${GRUPO}/${DISPO}`;
     const t = Date.now();
-    const temp = +(20 + Math.random() * 8).toFixed(2); // cambia por tu dato real
-    const hum = +(50 + Math.random() * 20).toFixed(1);
-    c.publish(`${base}/temperatura`, JSON.stringify({ v: temp, u: "C", t }));
-    c.publish(`${base}/humedad`, JSON.stringify({ v: hum, u: "%", t }));
-    console.log("->", base, "temp", temp, "hum", hum);
+    for (const s of SENSORES) {
+      const valor = +(s.min + Math.random() * (s.max - s.min)).toFixed(2);
+      const topico = `taller/${GRUPO}/${s.dispositivo}/${s.metrica}`;
+      c.publish(topico, JSON.stringify({ v: valor, u: s.unidad, t }));
+      console.log("->", topico, valor, s.unidad);
+    }
+    console.log("---");
   }, 2000);
 });
 

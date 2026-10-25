@@ -1,9 +1,9 @@
-# Sensor del taller — publica a tu broker MQTT (sobre WebSocket / wss).
+# Sensor del taller — publica VARIOS sensores a tu broker MQTT (sobre WebSocket / wss).
 # Requisito:  pip install paho-mqtt
 # Ejecuta:    python sensor.py
 #
-# Edita HOST, GRUPO, DISPO y TOKEN con los datos que te dio el docente
-# (o cópialos ya rellenos desde la página /comenzar de la app).
+# TU TAREA: deja al menos 3 sensores DIFERENTES en la lista SENSORES
+#           (cambia nombres, métricas, unidades y rangos por los de tu proyecto).
 
 import json
 import time
@@ -13,26 +13,36 @@ import paho.mqtt.client as mqtt
 HOST  = "TU-APP.up.railway.app"   # dominio de la app en Railway (sin https:// ni /mqtt)
 PORT  = 443
 GRUPO = "grupo1"                  # <-- el nombre de tu grupo (será tu usuario)
-DISPO = "sensor1"                 # <-- el nombre de tu dispositivo
 TOKEN = "PON-AQUI-EL-TOKEN"       # token del taller (tu contraseña)
 
-c = mqtt.Client(client_id=f"{GRUPO}-{DISPO}", transport="websockets")
+# >>> MÍNIMO 3 SENSORES DIFERENTES — edita esta lista <<<
+SENSORES = [
+    {"dispositivo": "tanque_leche",   "metrica": "nivel",       "unidad": "%",   "min": 40,  "max": 95},
+    {"dispositivo": "banda_envasado", "metrica": "velocidad",   "unidad": "m/s", "min": 0.2, "max": 1.5},
+    {"dispositivo": "camara_frio",    "metrica": "temperatura", "unidad": "C",   "min": 2,   "max": 8},
+]
+
+CID = f"{GRUPO}-{random.randint(1000, 9999)}"
+try:  # paho-mqtt 2.x
+    c = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=CID, transport="websockets")
+except AttributeError:  # paho-mqtt 1.x
+    c = mqtt.Client(client_id=CID, transport="websockets")
 c.ws_set_options(path="/mqtt")
 c.username_pw_set(GRUPO, TOKEN)
 c.tls_set()                       # conexión segura wss (TLS)
 c.connect(HOST, PORT, 60)
 c.loop_start()
-print("conectado, publicando...  (Ctrl+C para parar)")
+print(f"conectado como '{GRUPO}' con {len(SENSORES)} sensores.  (Ctrl+C para parar)")
 
 try:
     while True:
-        base = f"taller/{GRUPO}/{DISPO}"
         t = int(time.time() * 1000)
-        temp = round(20 + random.random() * 8, 2)   # cambia por tu dato real
-        hum  = round(50 + random.random() * 20, 1)
-        c.publish(f"{base}/temperatura", json.dumps({"v": temp, "u": "C", "t": t}))
-        c.publish(f"{base}/humedad",     json.dumps({"v": hum,  "u": "%", "t": t}))
-        print("->", base, "temp", temp, "hum", hum)
+        for s in SENSORES:
+            valor = round(random.uniform(s["min"], s["max"]), 2)
+            topico = f"taller/{GRUPO}/{s['dispositivo']}/{s['metrica']}"
+            c.publish(topico, json.dumps({"v": valor, "u": s["unidad"], "t": t}))
+            print("->", topico, valor, s["unidad"])
+        print("---")
         time.sleep(2)
 except KeyboardInterrupt:
     c.loop_stop()

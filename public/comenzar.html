@@ -57,17 +57,28 @@
   </div>
 
   <div class="card">
-    <h3><span class="k">#</span> 3 · Verifica</h3>
-    <ul class="steps">
-      <li>Cambia <code>GRUPO</code> y <code>DISPO</code> por los nombres de tu grupo y tu sensor.</li>
-      <li>Pega el <b>token</b> del taller donde dice <code>TOKEN</code>.</li>
-      <li>Ejecuta el script. Deberías ver <code>conectado, publicando…</code> en tu consola.</li>
-      <li>Abre <a href="/taller.html">el Taller en vivo</a>: tu dispositivo debe aparecer en segundos y sus lecturas quedan guardadas en la base de datos.</li>
+    <h3><span class="k">#</span> 3 · Tu tarea — mínimo 3 sensores diferentes</h3>
+    <p style="margin:0 0 10px;font-size:14px" class="mut">En la lista <code>SENSORES</code> deja <b>al menos tres</b> dispositivos distintos, cada uno con su métrica, unidad y rango. Tres ejemplos para arrancar (cámbialos por los de tu proyecto):</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Dispositivo</th><th>Métrica</th><th>Unidad</th><th>Rango</th></tr></thead>
+        <tbody>
+          <tr><td class="topic">tanque_leche</td><td>nivel</td><td>%</td><td class="mono">40–95</td></tr>
+          <tr><td class="topic">banda_envasado</td><td>velocidad</td><td>m/s</td><td class="mono">0.2–1.5</td></tr>
+          <tr><td class="topic">camara_frio</td><td>temperatura</td><td>°C</td><td class="mono">2–8</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="steps" style="margin-top:14px">
+      <li>Pon tu <b>grupo</b> y pega el <b>token</b> del taller.</li>
+      <li>Edita la lista <code>SENSORES</code>: deja 3 o más dispositivos diferentes.</li>
+      <li>Instala la librería y ejecuta el script. Debes ver <code>conectado … con N sensores</code>.</li>
+      <li>Abre <a href="/taller.html">el Taller en vivo</a>: tus 3 dispositivos aparecen bajo tu grupo y sus lecturas quedan guardadas.</li>
     </ul>
   </div>
 
   <div class="footer">
-    <span>Reto del día: crea 2 dispositivos distintos en tu grupo y míralos juntos en el taller</span>
+    <span>Reto del día: 3 sensores distintos publicando a la vez y visibles en el taller</span>
     <span>Gobierno de TI y CPPS · USB</span>
   </div>
 </main>

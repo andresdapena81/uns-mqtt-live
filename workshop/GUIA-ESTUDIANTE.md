@@ -22,12 +22,20 @@ taller/grupo3/banda/temperatura     →  {"v": 24.7, "u": "C", "t": 173000000000
 
 > Solo puedes publicar bajo el nombre de **tu** grupo. Leer es abierto.
 
-## Pasos
+## Tu tarea — crear el script con MÍNIMO 3 sensores diferentes
 
 1. Entra a `https://<app>.up.railway.app/comenzar.html` — ahí tienes el script ya
-   rellenado con la URL. Cópialo (Python o Node).
-2. O usa los archivos de esta carpeta: `sensor.py` (Python) o `sensor.js` (Node).
-3. Edita en el script: `GRUPO`, `DISPO` (nombre del dispositivo) y `TOKEN`.
+   rellenado con la URL. Cópialo (Python o Node). O usa `sensor.py` / `sensor.js` de esta carpeta.
+2. Edita: tu `GRUPO` y el `TOKEN` del taller.
+3. Edita la lista `SENSORES`: deja **al menos 3 dispositivos diferentes**, cada uno con su
+   métrica, unidad y rango. Tres ejemplos para arrancar (cámbialos por los de tu proyecto):
+
+   | Dispositivo | Métrica | Unidad | Rango |
+   |---|---|---|---|
+   | `tanque_leche` | nivel | % | 40–95 |
+   | `banda_envasado` | velocidad | m/s | 0.2–1.5 |
+   | `camara_frio` | temperatura | °C | 2–8 |
+
 4. Instala la librería y ejecuta:
 
    **Python**
@@ -41,16 +49,15 @@ taller/grupo3/banda/temperatura     →  {"v": 24.7, "u": "C", "t": 173000000000
    npm init -y && npm install mqtt
    node sensor.js
    ```
-5. Deberías ver `conectado, publicando...` en tu consola.
-6. Abre `https://<app>.up.railway.app/taller.html` — **tu dispositivo aparece en vivo**
-   y sus lecturas quedan guardadas en la base de datos.
+5. Debes ver `conectado como '<grupo>' con 3 sensores` en tu consola.
+6. Abre `https://<app>.up.railway.app/taller.html` — tus **3 dispositivos** aparecen bajo tu
+   grupo y sus lecturas quedan guardadas en la base de datos.
 
 ## Reto del día
 
-- Crea **2 dispositivos distintos** en tu grupo (p. ej. `banda` y `tanque`), cada uno con
-  su métrica, y míralos juntos en el monitor del taller.
-- Cambia los valores simulados por algo con sentido para tu proyecto (temperatura,
-  conteo, nivel, OEE…). La estructura del tópico es tu decisión de diseño del UNS.
+- Que tus **3 sensores distintos** publiquen a la vez y se vean juntos en el monitor del taller.
+- Que tengan sentido para tu proyecto (nivel, temperatura, velocidad, conteo, OEE…). La
+  estructura del tópico `taller/<grupo>/<dispositivo>/<métrica>` es tu diseño del UNS.
 
 ## Si algo falla
 
