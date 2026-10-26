@@ -73,8 +73,9 @@ aedes.on("publish", (packet, client) => {
   const parts = t.split("/"); // taller / grupo / dispositivo / metrica...
   const payload = packet.payload ? packet.payload.toString() : "";
   let valor = null;
-  try { const o = JSON.parse(payload); valor = typeof o === "object" && o && "v" in o ? +o.v : (isFinite(+payload) ? +payload : null); }
-  catch (_) { valor = isFinite(+payload) ? +payload : null; }
+  try { const o = JSON.parse(payload); valor = typeof o === "object" && o && "v" in o ? +o.v : +payload; }
+  catch (_) { valor = +payload; }
+  if (!isFinite(valor)) valor = null; // estados y textos (p. ej. "online") se guardan sin valor numérico
   db.save({
     grupo: parts[1] || null,
     dispositivo: parts[2] || null,
@@ -131,5 +132,13 @@ const PORT = process.env.PORT || 8080;
 db.init().catch((e) => console.error("[db] init:", e.message)).finally(() => {
   server.listen(PORT, () => {
     console.log(`[http] en :${PORT}  · WS MQTT: /mqtt  · token ${TOKEN ? "REQUERIDO" : "no requerido"}`);
+    // Planta del profesor (grupo "profesor", ISA-95 completa) — siempre encendida salvo PROFESOR_PLANT=off
+    if (process.env.PROFESOR_PLANT !== "off") {
+      try { require("./plant").start({ port: PORT, token: TOKEN }); }
+      catch (e) { console.error("[plant] no se pudo iniciar:", e.message); }
+    }
+    // Retención de la base cada hora (más una pasada al arrancar).
+    db.cleanup();
+    setInterval(() => db.cleanup(), 60 * 60 * 1000);
   });
 });

@@ -33,6 +33,9 @@ muestra ya rellenados con la URL real.
 | `WORKSHOP_TOKEN` | Contraseña única del taller para **publicar** | recomendada |
 | `DATABASE_URL` | Postgres para **guardar** las lecturas | recomendada |
 | `MQTT_TCP_PORT` | Puerto MQTT TCP (solo local / herramientas) | no |
+| `PROFESOR_PLANT` | `off` para apagar la planta del profesor (por defecto encendida) | no |
+| `PLANT_PERIOD_MS` | Cada cuánto publica la planta del profesor (def. 5000) | no |
+| `RETENTION_DAYS` | Días de lecturas que se conservan en Postgres (def. 7) | no |
 
 Sin `WORKSHOP_TOKEN` el broker publica abierto. Sin `DATABASE_URL` guarda **en memoria**
 (se pierde al reiniciar) para que todo funcione igual mientras configuras la base.
@@ -50,7 +53,20 @@ Sin `WORKSHOP_TOKEN` el broker publica abierto. Sin `DATABASE_URL` guarda **en m
 > ESP32 / dispositivos solo-TCP: necesitan el **TCP Proxy** de Railway (opcional, más adelante).
 > Para laptops con Python/Node, WebSocket es suficiente.
 
-## API (para el dashboard de la próxima clase)
+## Planta del profesor (grupo `profesor`)
+
+El servidor incluye una **planta completa modelada en ISA-95** (Lácteos La Pradera) que corre
+siempre como el grupo `profesor` (ver `plant.js`): 6 áreas (recepción, pasteurización,
+fermentación, envasado ×2 líneas, frío, energía), ~15 máquinas y **66 señales** —datos,
+estados y KPIs de gobierno (OEE y sus factores, calidad, energía)— publicadas y guardadas.
+
+- Tópico: `taller/profesor/<area>/<linea>/<maquina>/<metrica>`
+- Payload: `{v,u,t,empresa,sitio,area,linea,maquina,metrica,tipo}` (tipo = dato | kpi | estado)
+
+Es la base de datos rica para construir un **tablero de gobierno**. Se consulta por
+`/api/readings?grupo=profesor`.
+
+## API (para el tablero de gobierno)
 
 | Endpoint | Devuelve |
 |---|---|

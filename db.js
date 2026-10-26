@@ -88,6 +88,21 @@ async function groups() {
     .sort((a, b) => b.ultimo - a.ultimo);
 }
 
+// Retención: evita que la base crezca sin límite (la planta publica 24/7).
+async function cleanup() {
+  if (mode !== "postgres") {
+    if (mem.length > MEM_MAX) mem.splice(0, mem.length - MEM_MAX);
+    return;
+  }
+  const dias = Math.max(1, Number(process.env.RETENTION_DAYS || 7));
+  try {
+    const r = await pool.query("DELETE FROM readings WHERE ts < now() - ($1 || ' days')::interval", [String(dias)]);
+    if (r.rowCount) console.log(`[db] retención: ${r.rowCount} lecturas de más de ${dias} días eliminadas`);
+  } catch (e) {
+    console.error("[db] cleanup:", e.message);
+  }
+}
+
 async function readings({ grupo, dispositivo, limit = 100 } = {}) {
   limit = Math.min(1000, Math.max(1, +limit || 100));
   if (mode === "postgres") {
@@ -106,4 +121,4 @@ async function readings({ grupo, dispositivo, limit = 100 } = {}) {
     .slice(-limit).reverse();
 }
 
-module.exports = { init, save, stats, groups, readings, get mode() { return mode; } };
+module.exports = { init, save, stats, groups, readings, cleanup, get mode() { return mode; } };
