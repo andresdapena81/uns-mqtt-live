@@ -18,6 +18,12 @@ const bounded = (v, amp, min, max) => {
 const noisy = (base, amp, dec = 2) => () => +(base + (Math.random() - 0.5) * amp).toFixed(dec);
 const counter = (start, maxStep) => { let v = start; return () => { v += Math.floor(Math.random() * (maxStep + 1)); return v; }; };
 const accum = (start, per) => { let v = start; return () => { v += per * (0.7 + Math.random() * 0.6); return +v.toFixed(2); }; };
+// Día local de la planta (America/Bogota por defecto) en formato YYYY-MM-DD.
+const TZ = process.env.PLANT_TZ || "America/Bogota";
+const bogotaDay = () => new Date().toLocaleDateString("en-CA", { timeZone: TZ });
+// Contadores que se reinician a medianoche (hora de la planta): producción, rechazos, kWh "de hoy".
+const dailyCounter = (maxStep, dayFn = bogotaDay) => { let v = 0, day = dayFn(); return () => { const d = dayFn(); if (d !== day) { day = d; v = 0; } v += Math.floor(Math.random() * (maxStep + 1)); return v; }; };
+const dailyAccum = (per, dayFn = bogotaDay) => { let v = 0, day = dayFn(); return () => { const d = dayFn(); if (d !== day) { day = d; v = 0; } v += per * (0.7 + Math.random() * 0.6); return +v.toFixed(2); }; };
 const konst = (x) => () => x;
 const status = (pOff = 0.03) => { let s = "online"; return () => { if (s === "online" && Math.random() < pOff) s = "offline"; else if (s === "offline" && Math.random() < 0.6) s = "online"; return s; }; };
 const door = () => { let s = "cerrada"; return () => { if (s === "cerrada" && Math.random() < 0.08) s = "abierta"; else if (s === "abierta" && Math.random() < 0.7) s = "cerrada"; return s; }; };
@@ -73,20 +79,20 @@ sig("fermentacion", "fermentacion", "dosificador_dc01", "estado", "", "estado", 
 // -- Área: envasado (2 líneas) --
 for (const linea of ["linea1", "linea2"]) {
   sig("envasado", linea, "dosificadora_ds05", "volumen", "mL", "dato", bounded(150, 2, 140, 160));
-  sig("envasado", linea, "dosificadora_ds05", "conteo", "uds", "dato", counter(0, 6));
+  sig("envasado", linea, "dosificadora_ds05", "conteo", "uds", "dato", dailyCounter(6));   // producción de hoy
   sig("envasado", linea, "dosificadora_ds05", "estado", "", "estado", status());
   sig("envasado", linea, "tapadora_tp03", "torque", "Nm", "dato", bounded(1.8, 0.2, 1, 3));
-  sig("envasado", linea, "tapadora_tp03", "rechazos", "uds", "dato", counter(0, 1));
+  sig("envasado", linea, "tapadora_tp03", "rechazos", "uds", "dato", dailyCounter(1));      // rechazos de hoy
   sig("envasado", linea, "tapadora_tp03", "estado", "", "estado", status());
-  sig("envasado", linea, "etiquetadora_et02", "conteo", "uds", "dato", counter(0, 6));
-  sig("envasado", linea, "etiquetadora_et02", "rechazos", "uds", "dato", counter(0, 1));
+  sig("envasado", linea, "etiquetadora_et02", "conteo", "uds", "dato", dailyCounter(6));
+  sig("envasado", linea, "etiquetadora_et02", "rechazos", "uds", "dato", dailyCounter(1));
   // KPIs de gobierno a nivel de línea (coherentes: oee = d·r·c)
   const k = makeOEE();
   sig("envasado", linea, "kpi", "disponibilidad", "", "kpi", k.disp);
   sig("envasado", linea, "kpi", "rendimiento", "", "kpi", k.rend);
   sig("envasado", linea, "kpi", "calidad", "", "kpi", k.cal);
   sig("envasado", linea, "kpi", "oee", "", "kpi", k.oee);
-  sig("envasado", linea, "kpi", "paradas", "min", "kpi", counter(0, 1));
+  sig("envasado", linea, "kpi", "paradas", "min", "kpi", dailyCounter(1));
 }
 
 // -- Área: frío / almacén --
@@ -99,7 +105,7 @@ sig("frio", "frio", "compresor_cp01", "estado", "", "estado", status());
 
 // -- Área: energía / utilidades --
 sig("energia", "utilidades", "medidor_em01", "potencia", "kW", "dato", bounded(145, 20, 60, 260));
-sig("energia", "utilidades", "medidor_em01", "energia", "kWh", "kpi", accum(12000, 0.2));
+sig("energia", "utilidades", "medidor_em01", "energia", "kWh", "kpi", dailyAccum(0.2));   // kWh de hoy
 sig("energia", "utilidades", "medidor_em01", "factor_potencia", "", "dato", bounded(0.94, 0.03, 0.82, 0.99));
 sig("energia", "utilidades", "caldera_cl01", "presion_vapor", "bar", "dato", bounded(8, 0.6, 5, 11));
 sig("energia", "utilidades", "caldera_cl01", "temperatura", "C", "dato", bounded(165, 6, 120, 190));

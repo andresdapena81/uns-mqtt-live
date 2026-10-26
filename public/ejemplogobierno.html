@@ -119,6 +119,20 @@ section{margin-top:30px}
 
 footer{color:var(--muted);font-size:12.5px;padding:22px 0 40px;border-top:1px solid var(--line);margin-top:34px}
 .live-tag{font-size:11px;font-weight:700;color:var(--pradera);background:var(--pradera-soft);padding:4px 10px;border-radius:999px}
+
+/* botón de explicación + modal */
+.info{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);width:18px;height:18px;border-radius:50%;font:700 11px/1 var(--body);cursor:pointer;display:inline-grid;place-items:center;vertical-align:middle;margin-left:7px;padding:0;transition:.15s}
+.info:hover{color:var(--pradera);border-color:var(--pradera);background:var(--pradera-soft)}
+.info:focus-visible{outline:2px solid var(--sky);outline-offset:1px}
+.kpi .k .info{margin-left:5px} .sec-head .info{align-self:center}
+.modal-bg{position:fixed;inset:0;background:rgba(16,30,45,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border-radius:18px;max-width:500px;width:100%;padding:26px;box-shadow:0 24px 70px rgba(16,30,45,.3);position:relative}
+.modal h4{font-family:var(--disp);font-size:21px;margin:0 36px 12px 0}
+.modal p{margin:0;font-size:14.5px;color:var(--ink);line-height:1.65}
+.modal .formula{margin-top:12px;font-family:var(--disp);font-size:14px;color:var(--pradera);background:var(--pradera-soft);border-radius:10px;padding:10px 14px}
+.modal .x{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--milk);color:var(--muted);font-size:16px;cursor:pointer;display:grid;place-items:center}
+.modal .x:hover{color:var(--ink);border-color:var(--muted)}
 </style>
 </head>
 <body>
@@ -159,44 +173,44 @@ footer{color:var(--muted);font-size:12.5px;padding:22px 0 40px;border-top:1px so
         </div>
       </div>
       <div>
-        <div class="title">Eficiencia general del equipo</div>
+        <div class="title">Eficiencia general del equipo <button class="info" data-explain="oee" aria-label="¿Qué es el OEE?">i</button></div>
         <h3>Disponibilidad × Rendimiento × Calidad</h3>
         <div class="factor">
-          <div class="fl"><span>Disponibilidad</span><b id="f-disp-v">—</b></div>
+          <div class="fl"><span>Disponibilidad <button class="info" data-explain="disponibilidad" aria-label="Explicar disponibilidad">i</button></span><b id="f-disp-v">—</b></div>
           <div class="bar"><span id="f-disp" style="width:0;background:var(--sky)"></span></div>
         </div>
         <div class="factor">
-          <div class="fl"><span>Rendimiento</span><b id="f-rend-v">—</b></div>
+          <div class="fl"><span>Rendimiento <button class="info" data-explain="rendimiento" aria-label="Explicar rendimiento">i</button></span><b id="f-rend-v">—</b></div>
           <div class="bar"><span id="f-rend" style="width:0;background:var(--sky)"></span></div>
         </div>
         <div class="factor">
-          <div class="fl"><span>Calidad</span><b id="f-cal-v">—</b></div>
+          <div class="fl"><span>Calidad <button class="info" data-explain="calidad" aria-label="Explicar calidad">i</button></span><b id="f-cal-v">—</b></div>
           <div class="bar"><span id="f-cal" style="width:0;background:var(--pradera)"></span></div>
         </div>
       </div>
     </div>
 
     <div class="kpis">
-      <div class="card kpi"><span class="k">Producción de hoy</span><span class="v num" id="kpi-prod">—</span><span class="d sub" id="kpi-prod-d">unidades acumuladas</span></div>
-      <div class="card kpi"><span class="k">Calidad</span><span class="v num" id="kpi-cal">—</span><span class="d down" id="kpi-cal-d">—</span></div>
-      <div class="card kpi"><span class="k">Energía ahora</span><span class="v num" id="kpi-ene">—</span><span class="d sub" id="kpi-ene-d">—</span></div>
-      <div class="card kpi"><span class="k">Equipos en línea</span><span class="v num" id="kpi-eq">—</span><span class="d sub" id="kpi-eq-d">—</span></div>
+      <div class="card kpi"><span class="k">Producción de hoy <button class="info" data-explain="produccion" aria-label="Explicar producción">i</button></span><span class="v num" id="kpi-prod">—</span><span class="d sub" id="kpi-prod-d">unidades acumuladas</span></div>
+      <div class="card kpi"><span class="k">Calidad <button class="info" data-explain="calidadkpi" aria-label="Explicar calidad">i</button></span><span class="v num" id="kpi-cal">—</span><span class="d down" id="kpi-cal-d">—</span></div>
+      <div class="card kpi"><span class="k">Energía ahora <button class="info" data-explain="energia" aria-label="Explicar energía">i</button></span><span class="v num" id="kpi-ene">—</span><span class="d sub" id="kpi-ene-d">—</span></div>
+      <div class="card kpi"><span class="k">Equipos en línea <button class="info" data-explain="equipos" aria-label="Explicar equipos en línea">i</button></span><span class="v num" id="kpi-eq">—</span><span class="d sub" id="kpi-eq-d">—</span></div>
     </div>
   </div>
 
   <section>
-    <div class="sec-head"><h2>Áreas de la planta</h2><span class="hint">modelo ISA-95 · estado en vivo</span></div>
+    <div class="sec-head"><h2>Áreas de la planta</h2><button class="info" data-explain="areas" aria-label="Explicar áreas ISA-95">i</button><span class="hint">modelo ISA-95 · estado en vivo</span></div>
     <div class="areas" id="areas"></div>
   </section>
 
   <section class="two">
     <div>
-      <div class="sec-head"><h2>Líneas de envasado</h2></div>
+      <div class="sec-head"><h2>Líneas de envasado</h2><button class="info" data-explain="lineas" aria-label="Explicar líneas">i</button></div>
       <div class="lines" id="lines"></div>
     </div>
     <div class="side" style="display:grid;gap:20px;align-content:start">
       <div class="panel trend">
-        <h3>OEE de planta · tendencia</h3>
+        <h3>OEE de planta · tendencia <button class="info" data-explain="tendencia" aria-label="Explicar tendencia">i</button></h3>
         <svg viewBox="0 0 520 150" preserveAspectRatio="none" aria-hidden="true">
           <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#1F7A4D" stop-opacity="0.22"/><stop offset="1" stop-color="#1F7A4D" stop-opacity="0"/>
@@ -207,7 +221,7 @@ footer{color:var(--muted);font-size:12.5px;padding:22px 0 40px;border-top:1px so
         <div class="cap"><span>más antiguo</span><span>objetivo 85%</span><span>ahora</span></div>
       </div>
       <div class="panel">
-        <h3>Requieren atención</h3>
+        <h3>Requieren atención <button class="info" data-explain="alarmas" aria-label="Explicar alarmas">i</button></h3>
         <div class="alist" id="alarms"></div>
       </div>
     </div>
@@ -396,6 +410,37 @@ footer{color:var(--muted);font-size:12.5px;padding:22px 0 40px;border-top:1px so
 
   setInterval(render,1500);
   render();
+})();
+</script>
+<div class="modal-bg" id="modal-bg" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <button class="x" data-close aria-label="Cerrar">✕</button>
+    <h4 id="modal-title"></h4>
+    <p id="modal-body"></p>
+    <div class="formula" id="modal-formula" hidden></div>
+  </div>
+</div>
+<script>
+(function(){
+  const EXPL={
+    oee:{t:"OEE — Eficiencia General del Equipo", b:"Mide qué tanto aprovecha una línea su tiempo disponible: producir sin parar, a la velocidad ideal y sin defectos sería 100%. Referencia: ≥85% clase mundial, ~60% aceptable, menos de 40% inaceptable.", f:"OEE = Disponibilidad × Rendimiento × Calidad"},
+    disponibilidad:{t:"Disponibilidad", b:"Del tiempo que la línea estaba planificada para producir, ¿cuánto estuvo realmente operando? Penaliza paradas y averías.", f:"= tiempo operativo ÷ tiempo planificado"},
+    rendimiento:{t:"Rendimiento", b:"Mientras operaba, ¿produjo a la velocidad ideal? Penaliza microparadas y marcha lenta.", f:"= producción real ÷ producción ideal"},
+    calidad:{t:"Calidad", b:"De todo lo producido, ¿cuánto salió bueno? Penaliza defectos y reprocesos.", f:"= unidades buenas ÷ unidades totales"},
+    produccion:{t:"Producción de hoy", b:"Unidades envasadas acumuladas desde la medianoche (hora de Colombia). Se reinicia cada día."},
+    calidadkpi:{t:"Calidad", b:"Porcentaje de unidades buenas de la jornada. Los “rechazos” son las descartadas por defecto de tapado, etiqueta o llenado."},
+    energia:{t:"Energía", b:"Potencia eléctrica que consume la planta ahora mismo (kW) y la energía acumulada del día (kWh). Es indicador de eficiencia, costo y sostenibilidad."},
+    equipos:{t:"Equipos en línea", b:"Cuántas máquinas están operativas (online) frente al total. Se basa en el estado que cada equipo publica (idea de Sparkplug: BIRTH/DEATH). Si una cae, baja la disponibilidad."},
+    areas:{t:"Áreas de la planta (ISA-95)", b:"La norma ISA-95 organiza la planta en niveles: empresa → sitio → área → línea → máquina. Cada área tiene un semáforo: verde normal, ámbar atención, rojo crítico, según reglas de proceso (temperatura, pH, puerta…)."},
+    lineas:{t:"Líneas de envasado", b:"El OEE y sus tres factores calculados por cada línea. Comparar líneas ayuda a ver dónde se pierde eficiencia."},
+    tendencia:{t:"Tendencia de OEE", b:"Cómo ha evolucionado el OEE de la planta en el tiempo. Sirve para ver si una acción lo mejoró o empeoró. La meta de referencia es 85%."},
+    alarmas:{t:"Requieren atención", b:"Eventos activos fuera de los límites seguros: cadena de frío, pH, equipos detenidos, OEE bajo. Es lo que un operador debería atender de inmediato."}
+  };
+  const bg=document.getElementById("modal-bg"), mt=document.getElementById("modal-title"), mb=document.getElementById("modal-body"), mf=document.getElementById("modal-formula");
+  function open(k){ const x=EXPL[k]; if(!x) return; mt.textContent=x.t; mb.textContent=x.b; if(x.f){mf.textContent=x.f; mf.hidden=false;} else mf.hidden=true; bg.classList.add("open"); const xb=document.querySelector(".modal .x"); if(xb) xb.focus(); }
+  function close(){ bg.classList.remove("open"); }
+  document.addEventListener("click",function(e){ const b=e.target.closest(".info"); if(b){ e.preventDefault(); open(b.dataset.explain); return; } if(e.target===bg || e.target.closest("[data-close]")) close(); });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") close(); });
 })();
 </script>
 </body>

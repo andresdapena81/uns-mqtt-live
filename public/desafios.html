@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Desafíos de seguridad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+  .intro{font-size:14.5px;max-width:74ch;color:var(--ink)}
+  .rule{display:flex;gap:12px;align-items:flex-start;background:#1c0c0b;border:1px solid var(--red);border-radius:8px;padding:14px 16px;margin:16px 0 8px}
+  .rule .x{color:var(--red);font-weight:700;font-family:var(--mono)}
+  .rule div{font-size:13.5px}
+  .reto{margin-top:18px}
+  .reto h3{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--disp);font-size:18px;color:var(--ink);letter-spacing:-.01em;margin-bottom:10px;text-transform:none}
+  .reto .nn{font-family:var(--mono);color:var(--lime);font-size:14px}
+  .lvl{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--mut)}
+  .lvl.facil{color:var(--green);border-color:#234a2b;background:#0d1a10}
+  .lvl.medio{color:var(--amber);border-color:#4a3a12;background:#1a1405}
+  .lvl.gob{color:var(--cyan);border-color:#1c4a4f;background:#09191b}
+  .cia{display:inline-flex;gap:5px}
+  .cia span{font-family:var(--mono);font-size:10px;width:18px;height:18px;border-radius:4px;display:grid;place-items:center;border:1px solid var(--line2);color:var(--mut)}
+  .cia span.on{color:var(--lime);border-color:var(--lime)}
+  .obj{font-size:14px;color:var(--ink);margin:0 0 10px}
+  .lesson{font-family:var(--mono);font-size:12px;color:#bfe0ff;border-left:3px solid var(--cyan);padding:8px 12px;margin-top:12px;background:#0a1518}
+  .ent{font-family:var(--mono);font-size:12px;color:var(--lime);margin-top:10px}
+  table.sec{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+  table.sec th,table.sec td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  table.sec th{font-family:var(--mono);font-size:10.5px;color:var(--mut);text-transform:uppercase;background:#0d0d0d}
+  table.sec td:first-child{color:var(--cyan);font-family:var(--mono)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hrow">
+    <span class="badge">GOBIERNO DE TI · S11</span>
+    <div style="margin-right:auto">
+      <div class="htitle">DESAFÍOS DE SEGURIDAD</div>
+      <div class="hsub">para quienes ya conectaron sus sensores · seguridad del UNS</div>
+    </div>
+  </div>
+</header>
+
+<nav class="top wrap" aria-label="Secciones">
+  <a href="/">Demo (planta)</a>
+  <a href="/taller.html">Taller en vivo</a>
+  <a href="/dashboard.html">Dashboard</a>
+  <a href="/comenzar.html">Conectar tu sensor</a>
+  <a href="/desafios.html" class="active">Desafíos</a>
+</nav>
+
+<main class="wrap">
+  <p class="intro">¿Ya tienes tus 3 sensores publicando? Estos retos te llevan al otro lado: el de la <b style="color:var(--cyan)">seguridad</b>. Nuestro broker está <b>a propósito abierto</b> (token compartido, sin TLS mutuo, sin ACLs por tópico). Tu misión es <b>descubrir</b> esas debilidades, ver qué controles sí funcionan y proponer cómo asegurarlo — conectándolo con la tríada <b>CIA</b> e <b>IEC 62443</b> (S14–S15).</p>
+
+  <div class="rule">
+    <span class="x">REGLA</span>
+    <div>Nada que afecte a tus compañeros en el broker compartido: <b>no satures</b> el broker con inundaciones ni borres datos de otros. Todo aquí es <b>observar</b>, probar en <b>tu propio grupo</b>, o <b>diseñar</b>. Un ataque de denegación de servicio real se analiza en papel, no se ejecuta contra la clase.</div>
+  </div>
+
+  <!-- RETO 1 -->
+  <div class="card reto">
+    <h3><span class="nn">RETO 01</span> Reconocimiento: ¿qué ve un intruso?
+      <span class="lvl facil">fácil</span>
+      <span class="cia"><span class="on" title="Confidencialidad">C</span><span title="Integridad">I</span><span title="Disponibilidad">A</span></span>
+    </h3>
+    <p class="obj">Suscríbete a <code>#</code> (todo el broker) y mira cuánta información ajena puedes leer — incluida la planta del <code>profesor</code> y los demás grupos. Pista inquietante: <b>ni siquiera necesitas el token para leer.</b></p>
+    <div class="codeblock"><button class="copy" data-copy="r1">copiar</button><pre id="r1"></pre></div>
+    <p class="ent">Entregable: ¿cuántos grupos/dispositivos ajenos viste? Con esa data, ¿qué podría deducir o hacer un atacante?</p>
+    <p class="lesson">Gobierno: el broker no ofrece <b>confidencialidad</b> ni segmentación de lectura. Controles: ACLs de suscripción por tópico, cifrado, zonas y conductos (IEC 62443 · FR4/FR5).</p>
+  </div>
+
+  <!-- RETO 2 -->
+  <div class="card reto">
+    <h3><span class="nn">RETO 02</span> Autorización: intenta suplantar a otro grupo
+      <span class="lvl medio">medio</span>
+      <span class="cia"><span title="Confidencialidad">C</span><span class="on" title="Integridad">I</span><span title="Disponibilidad">A</span></span>
+    </h3>
+    <p class="obj">Conéctate como <b>tu</b> grupo e intenta <b>publicar</b> en el espacio de otro: <code>taller/otrogrupo/...</code> o en <code>taller/profesor/...</code>. Observa en <a href="/taller.html">/taller</a> si tu mensaje llega.</p>
+    <div class="codeblock"><button class="copy" data-copy="r2">copiar</button><pre id="r2"></pre></div>
+    <p class="ent">Entregable: ¿se publicó o el broker lo rechazó? ¿Qué control es este y qué pasaría en una planta sin él?</p>
+    <p class="lesson">Gobierno: aquí SÍ hay <b>control de autorización</b> (aislamiento por grupo). Es el <b>mínimo privilegio</b>: cada quien solo escribe en lo suyo (IEC 62443 · FR1/FR2). Contrasta con el Reto 01: leer está abierto, escribir no.</p>
+  </div>
+
+  <!-- RETO 3 -->
+  <div class="card reto">
+    <h3><span class="nn">RETO 03</span> Dato envenenado: validación de entradas
+      <span class="lvl medio">medio</span>
+      <span class="cia"><span title="Confidencialidad">C</span><span class="on" title="Integridad">I</span><span title="Disponibilidad">A</span></span>
+    </h3>
+    <p class="obj">En <b>tu propio</b> tópico, publica valores absurdos o basura y observa cómo reaccionan <a href="/taller.html">/taller</a> y <a href="/dashboard.html">/dashboard</a>: ¿se rompen, muestran algo imposible, o lo filtran?</p>
+    <div class="codeblock"><button class="copy" data-copy="r3">copiar</button><pre id="r3"></pre></div>
+    <p class="ent">Entregable: describe qué pasó con cada payload y propón 2 validaciones que debería hacer el consumidor (rango, tipo, esquema).</p>
+    <p class="lesson">Gobierno: <b>gobierno del dato</b> y defensa en el consumidor — nunca confíes en lo que publica el sensor. Un dato fuera de rango puede disparar una mala decisión (IEC 62443 · FR3 integridad).</p>
+  </div>
+
+  <!-- RETO 4 -->
+  <div class="card reto">
+    <h3><span class="nn">RETO 04</span> Diseña el “UNS seguro”
+      <span class="lvl gob">reto de gobierno</span>
+      <span class="cia"><span class="on" title="Confidencialidad">C</span><span class="on" title="Integridad">I</span><span class="on" title="Disponibilidad">A</span></span>
+    </h3>
+    <p class="obj">Sin tocar nada: redacta cómo <b>endurecerías</b> este broker. Para cada control, di qué propiedad protege (C/I/A) y a qué requisito fundamental (FR) de IEC 62443 corresponde. Completa y amplía esta tabla:</p>
+    <div class="tablewrap">
+      <table class="sec">
+        <thead><tr><th>Control</th><th>Protege</th><th>IEC 62443 (FR)</th></tr></thead>
+        <tbody>
+          <tr><td>Credencial única por dispositivo (no token compartido)</td><td>Integridad · Autenticidad</td><td>FR1 · Identificación y autenticación</td></tr>
+          <tr><td>ACLs por tópico (quién lee / quién escribe)</td><td>Confidencialidad · Integridad</td><td>FR2 · Control de uso</td></tr>
+          <tr><td>TLS con certificados de cliente (mutuo)</td><td>Confidencialidad</td><td>FR4 · Confidencialidad de datos</td></tr>
+          <tr><td>Validación de esquema del payload</td><td>Integridad</td><td>FR3 · Integridad del sistema</td></tr>
+          <tr><td>— completa 3 controles más —</td><td>…</td><td>…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ent">Entregable: media página — tu plan de aseguramiento del UNS. Es el puente directo a las sesiones de ciberseguridad industrial (S14–S15).</p>
+    <p class="lesson">Gobierno: la seguridad no se “añade”, se diseña. Este plan es una decisión de <b>gobierno de arquitectura</b> (APO03) y de <b>riesgo</b> (APO12 / NIST CSF).</p>
+  </div>
+
+  <!-- BONUS -->
+  <div class="card reto">
+    <h3><span class="nn">BONUS</span> ¿Viaja cifrado?
+      <span class="lvl facil">fácil</span>
+      <span class="cia"><span class="on" title="Confidencialidad">C</span><span title="Integridad">I</span><span title="Disponibilidad">A</span></span>
+    </h3>
+    <p class="obj">Abre las <b>DevTools</b> del navegador (F12 → pestaña Red/Network), filtra por <code>WS</code> y mira la conexión a <code>/mqtt</code>. ¿Es <code>ws://</code> o <code>wss://</code>?</p>
+    <p class="ent">Entregable: explica qué protege el cifrado en tránsito (wss/TLS) y qué <b>NO</b> protege (quién puede leer o escribir en el broker). El cifrado no es autorización.</p>
+    <p class="lesson">Gobierno: confidencialidad en tránsito ≠ control de acceso. Hacen falta ambas, en capas (defensa en profundidad).</p>
+  </div>
+
+  <div class="footer">
+    <span>Seguridad del UNS · tríada CIA + IEC 62443 · conecta con S14–S15</span>
+    <span>Gobierno de TI y CPPS · USB</span>
+  </div>
+</main>
+
+<script>
+(function(){
+  var HOST=location.hostname, TOKEN="sanbuenaventura2026*+";
+  var base='import paho.mqtt.client as mqtt, time\nHOST="'+HOST+'"\n';
+  var R={
+r1: base+
+'# Espía: conectarse SIN token y leer TODO el broker\n'+
+'try: c=mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, transport="websockets")\n'+
+'except AttributeError: c=mqtt.Client(transport="websockets")\n'+
+'c.ws_set_options(path="/mqtt"); c.tls_set()        # sin username/password\n'+
+'vistos=set()\n'+
+'def on_msg(cl,u,m):\n'+
+'    vistos.add("/".join(m.topic.split("/")[:2]))   # agrupa por taller/<grupo>\n'+
+'    print(m.topic, "=", m.payload.decode()[:60])\n'+
+'c.on_message=on_msg\n'+
+'c.connect(HOST,443,60); c.subscribe("#"); c.loop_start()\n'+
+'time.sleep(15); c.loop_stop()\n'+
+'print("espacios vistos:", sorted(vistos))',
+r2: base+
+'GRUPO="grupo1"; TOKEN="'+TOKEN+'"      # te conectas como grupo1...\n'+
+'try: c=mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, transport="websockets")\n'+
+'except AttributeError: c=mqtt.Client(transport="websockets")\n'+
+'c.ws_set_options(path="/mqtt"); c.username_pw_set(GRUPO,TOKEN); c.tls_set()\n'+
+'c.connect(HOST,443,60); c.loop_start()\n'+
+'# ...pero intentas publicar en el espacio de OTRO:\n'+
+'info=c.publish("taller/profesor/hackeo/temperatura", "99")\n'+
+'time.sleep(1)\n'+
+'print("¿rechazado?  revisa /taller: tu mensaje NO debe aparecer")',
+r3: base+
+'GRUPO="grupo1"; TOKEN="'+TOKEN+'"\n'+
+'try: c=mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, transport="websockets")\n'+
+'except AttributeError: c=mqtt.Client(transport="websockets")\n'+
+'c.ws_set_options(path="/mqtt"); c.username_pw_set(GRUPO,TOKEN); c.tls_set()\n'+
+'c.connect(HOST,443,60); c.loop_start()\n'+
+'base="taller/"+GRUPO+"/sensor1/temperatura"\n'+
+'c.publish(base, \'{"v":99999,"u":"C"}\')   # valor imposible\n'+
+'c.publish(base, "esto no es json")         # payload basura\n'+
+'c.publish(base, "A"*5000)                  # payload gigante\n'+
+'time.sleep(1); print("mira /taller y /dashboard: ¿qué muestran?")'
+  };
+  for(var k in R){ var el=document.getElementById(k); if(el) el.textContent=R[k]; }
+  document.querySelectorAll(".copy").forEach(function(b){
+    b.addEventListener("click", async function(){
+      var t=document.getElementById(b.dataset.copy).textContent;
+      try{ await navigator.clipboard.writeText(t); b.textContent="¡copiado!"; }
+      catch(_){ var r=document.createRange(); r.selectNode(document.getElementById(b.dataset.copy)); var s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent="selecciona y Ctrl+C"; }
+      setTimeout(function(){b.textContent="copiar";},1800);
+    });
+  });
+})();
+</script>
+</body>
+</html>
