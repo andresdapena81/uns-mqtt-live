@@ -53,6 +53,38 @@ taller/grupo3/banda/temperatura     →  {"v": 24.7, "u": "C", "t": 173000000000
 6. Abre `https://<app>.up.railway.app/taller.html` — tus **3 dispositivos** aparecen bajo tu
    grupo y sus lecturas quedan guardadas en la base de datos.
 
+## El script por dentro (qué hace cada parte)
+
+```python
+import json, time, random          # datos (json), tiempo (time), azar (random)
+import paho.mqtt.client as mqtt     # el cliente que habla MQTT
+
+HOST  = "...up.railway.app"         # a quién me conecto (la app)
+PORT  = 443                         # puerto HTTPS/WSS
+GRUPO = "grupo1"                    # tu identidad = tu usuario
+TOKEN = "sanbuenaventura2026*+"     # tu contraseña = token del taller
+
+SENSORES = [ ... ]                  # TU lista: cada item es un dispositivo + métrica + rango
+
+# crear el cliente (el try/except soporta paho 1.x y 2.x)
+...
+c.ws_set_options(path="/mqtt")      # MQTT sobre WebSocket, ruta /mqtt
+c.username_pw_set(GRUPO, TOKEN)     # me identifico con grupo y token
+c.tls_set()                         # conexión segura (wss / TLS)
+c.connect(HOST, PORT, 60)           # abre la conexión
+c.loop_start()                      # arranca el hilo de red
+
+while True:                         # cada 2 s...
+    for s in SENSORES:              # ...recorre tus sensores...
+        c.publish(f"taller/{GRUPO}/{s['dispositivo']}/{s['metrica']}",
+                  json.dumps({"v": valor, "u": s["unidad"], "t": ...}))   # ...y publica
+    time.sleep(2)
+```
+
+- **El tópico** `taller/<grupo>/<dispositivo>/<métrica>` es tu diseño del Unified Namespace.
+- **El payload** es un JSON `{"v": valor, "u": unidad, "t": tiempo}` — eso es lo que guarda la base.
+- Cambiar un sensor = editar (o agregar) un elemento en la lista `SENSORES`.
+
 ## Reto del día
 
 - Que tus **3 sensores distintos** publiquen a la vez y se vean juntos en el monitor del taller.
